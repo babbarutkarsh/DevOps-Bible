@@ -15,6 +15,7 @@ startups.
 {: .fs-6 .fw-300 }
 
 [Get started](topics/linux.html){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[2-Day Revision](topics/revision.html){: .btn .fs-5 .mb-4 .mb-md-0 .mr-2 }
 [View on GitHub](https://github.com/babbarutkarsh/DevOps-Bible){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 <div id="dob-progress" class="dob-progress" aria-live="polite">
