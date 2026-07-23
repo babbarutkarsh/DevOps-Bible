@@ -6,6 +6,8 @@ description: "Linux — DevOps interview preparation: concepts, most-asked quest
 
 # Linux — DevOps Interview Preparation
 
+> **Question frequency:** 🔥 very frequently asked · ⭐ important · 💡 good to know
+
 ## Table of Contents
 
 - [Linux Fundamentals](#linux-fundamentals)
@@ -21,6 +23,9 @@ description: "Linux — DevOps interview preparation: concepts, most-asked quest
 - [Log Management](#log-management)
 - [Kernel & Boot Process](#kernel--boot-process)
 - [Security Hardening](#security-hardening)
+- [Containers: Namespaces & Cgroups Deep Dive](#containers-namespaces--cgroups-deep-dive)
+- [Advanced Troubleshooting Scenarios](#advanced-troubleshooting-scenarios)
+- [Command-Line One-Liners & Golf](#command-line-one-liners--golf)
 - [Scenario-Based Questions](#scenario-based-questions)
 - [Key Commands Cheat Sheet](#key-commands-cheat-sheet)
 
@@ -28,7 +33,7 @@ description: "Linux — DevOps interview preparation: concepts, most-asked quest
 
 ## Linux Fundamentals
 
-### Q: What is the Linux boot process?
+### 🔥 Q: What is the Linux boot process?
 
 **Answer:**
 
@@ -40,7 +45,7 @@ description: "Linux — DevOps interview preparation: concepts, most-asked quest
 6. **Runlevel / Target** — System reaches the configured target (e.g., `multi-user.target` for CLI, `graphical.target` for GUI).
 7. **Login Prompt** — getty or display manager presents the login interface.
 
-### Q: What is the difference between a process and a thread?
+### 🔥 Q: What is the difference between a process and a thread?
 
 | Aspect | Process | Thread |
 |--------|---------|--------|
@@ -50,7 +55,7 @@ description: "Linux — DevOps interview preparation: concepts, most-asked quest
 | Crash Impact | Isolated — one crash doesn't affect others | One thread crash can kill the entire process |
 | Context Switch | Expensive (TLB flush, page table swap) | Cheap (same address space) |
 
-### Q: Explain Linux file system hierarchy.
+### ⭐ Q: Explain Linux file system hierarchy.
 
 ```
 /           Root of the entire filesystem
@@ -75,7 +80,7 @@ description: "Linux — DevOps interview preparation: concepts, most-asked quest
 └── /run    Runtime variable data since last boot
 ```
 
-### Q: What are inodes?
+### 🔥 Q: What are inodes?
 
 An **inode** is a data structure on a filesystem that stores metadata about a file:
 
@@ -91,7 +96,7 @@ An **inode** is a data structure on a filesystem that stores metadata about a fi
 - Check with: `df -i`
 - Soft links have their own inode; hard links share the same inode.
 
-### Q: Hard link vs Soft link?
+### 🔥 Q: Hard link vs Soft link?
 
 | Feature | Hard Link | Soft Link (Symlink) |
 |---------|-----------|---------------------|
@@ -105,7 +110,7 @@ An **inode** is a data structure on a filesystem that stores metadata about a fi
 
 ## File System & Storage
 
-### Q: Explain LVM and its components.
+### ⭐ Q: Explain LVM and its components.
 
 **LVM (Logical Volume Manager)** provides flexible disk management:
 
@@ -133,7 +138,7 @@ resize2fs /dev/vg_data/lv_app   # For ext4
 xfs_growfs /mount/point          # For XFS
 ```
 
-### Q: What is RAID? Explain levels.
+### ⭐ Q: What is RAID? Explain levels.
 
 | RAID Level | Min Disks | Redundancy | Performance | Usable Capacity |
 |-----------|-----------|------------|-------------|-----------------|
@@ -145,7 +150,7 @@ xfs_growfs /mount/point          # For XFS
 
 **FAANG Tip:** RAID is not a backup strategy — it protects against disk failure, not data corruption, accidental deletion, or ransomware.
 
-### Q: A disk is full. How do you troubleshoot?
+### 🔥 Q: A disk is full. How do you troubleshoot?
 
 ```bash
 # 1. Check disk usage
@@ -177,7 +182,7 @@ docker system prune -a    # If Docker is installed
 
 ## Process Management
 
-### Q: Explain process states in Linux.
+### 🔥 Q: Explain process states in Linux.
 
 ```
          fork()
@@ -210,7 +215,7 @@ docker system prune -a    # If Docker is installed
 | Stopped | T | Suspended by signal (SIGSTOP/SIGTSTP) |
 | Zombie | Z | Finished but parent hasn't read exit status via `wait()` |
 
-### Q: What are zombie processes and how to fix them?
+### ⭐ Q: What are zombie processes and how to fix them?
 
 A **zombie** is a process that has completed execution but still has an entry in the process table because its parent hasn't called `wait()` to collect the exit status.
 
@@ -231,7 +236,7 @@ kill -9 <parent_pid>
 # 3. If parent is essential, fix the application code to properly handle SIGCHLD
 ```
 
-### Q: Explain signals in Linux. Key signals to know:
+### 🔥 Q: Explain signals in Linux. Key signals to know:
 
 | Signal | Number | Default Action | Description |
 |--------|--------|---------------|-------------|
@@ -246,7 +251,7 @@ kill -9 <parent_pid>
 
 **FAANG Tip:** Always try `SIGTERM` before `SIGKILL`. Many applications (e.g., databases) need to flush buffers and close connections gracefully.
 
-### Q: What is the OOM Killer?
+### ⭐ Q: What is the OOM Killer?
 
 The **Out-of-Memory Killer** is a Linux kernel mechanism that kills processes when the system runs critically low on memory.
 
@@ -266,7 +271,7 @@ The **Out-of-Memory Killer** is a Linux kernel mechanism that kills processes wh
 
 ## Memory Management
 
-### Q: Explain Linux memory management (Virtual Memory, Pages, Swap).
+### 🔥 Q: Explain Linux memory management (Virtual Memory, Pages, Swap).
 
 **Virtual Memory:** Each process gets its own virtual address space. The MMU (Memory Management Unit) translates virtual addresses to physical addresses using page tables.
 
@@ -291,7 +296,7 @@ cat /proc/sys/vm/swappiness    # Default: 60
 sysctl vm.swappiness=10        # Prefer keeping data in RAM
 ```
 
-### Q: What are huge pages and why use them?
+### 💡 Q: What are huge pages and why use them?
 
 Regular pages are 4KB. **Huge Pages** are 2MB (or 1GB) pages that reduce TLB (Translation Lookaside Buffer) misses.
 
@@ -312,7 +317,7 @@ vm.nr_hugepages = 1024
 
 ## Networking in Linux
 
-### Q: How does DNS resolution work in Linux?
+### ⭐ Q: How does DNS resolution work in Linux?
 
 ```
 Application
@@ -353,7 +358,7 @@ dig +trace example.com
 resolvectl flush-caches
 ```
 
-### Q: Explain iptables / nftables.
+### ⭐ Q: Explain iptables / nftables.
 
 **iptables** is the traditional Linux firewall, using tables and chains:
 
@@ -402,7 +407,7 @@ iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 10.0.0.
 iptables-save > /etc/iptables/rules.v4
 ```
 
-### Q: What is the difference between TCP and UDP?
+### 🔥 Q: What is the difference between TCP and UDP?
 
 | Feature | TCP | UDP |
 |---------|-----|-----|
@@ -426,7 +431,7 @@ Client              Server
 
 ## User & Permission Management
 
-### Q: Explain Linux file permissions in depth.
+### 🔥 Q: Explain Linux file permissions in depth.
 
 ```
 -rwxr-xr-- 1 root devops 4096 Jan 1 00:00 script.sh
@@ -458,7 +463,7 @@ chmod 1777 /tmp/       # Sticky bit
 find / -perm -4000 -type f 2>/dev/null
 ```
 
-### Q: What is sudoers and how does it work?
+### ⭐ Q: What is sudoers and how does it work?
 
 The `/etc/sudoers` file controls who can run what commands as what user.
 
@@ -479,7 +484,7 @@ bob    ALL=(ALL) /usr/bin/systemctl restart nginx  # Specific command only
 
 ## Systemd & Init Systems
 
-### Q: Explain systemd and its key components.
+### 🔥 Q: Explain systemd and its key components.
 
 **systemd** is the init system (PID 1) on modern Linux, responsible for booting, service management, logging, and more.
 
@@ -540,7 +545,7 @@ WantedBy=multi-user.target
 | `on-abort` | Unhandled signal |
 | `always` | Always (except `systemctl stop`) |
 
-### Q: journalctl usage for log analysis?
+### ⭐ Q: journalctl usage for log analysis?
 
 ```bash
 journalctl -u nginx                    # Logs for a service
@@ -558,7 +563,7 @@ journalctl -o json-pretty -u nginx     # JSON output
 
 ## Package Management
 
-### Q: Explain package management across distributions.
+### ⭐ Q: Explain package management across distributions.
 
 | Task | Debian/Ubuntu (apt) | RHEL/CentOS (dnf/yum) |
 |------|--------------------|-----------------------|
@@ -576,7 +581,7 @@ journalctl -o json-pretty -u nginx     # JSON output
 
 ## Performance Troubleshooting
 
-### Q: A server is slow. Walk me through your troubleshooting methodology.
+### 🔥 Q: A server is slow. Walk me through your troubleshooting methodology.
 
 **USE Method (Utilization, Saturation, Errors) by Brendan Gregg:**
 
@@ -614,7 +619,7 @@ strace -p <pid> -c           # System call summary
 lsof -p <pid>                # Open files/sockets
 ```
 
-### Q: How do you investigate high CPU usage?
+### 🔥 Q: How do you investigate high CPU usage?
 
 ```bash
 # 1. Identify the process
@@ -641,7 +646,7 @@ pidstat -p <pid> 1            # %usr vs %system
 # - Fork bombs: :(){ :|:& };:
 ```
 
-### Q: How do you investigate high I/O wait?
+### 🔥 Q: How do you investigate high I/O wait?
 
 ```bash
 # 1. Confirm I/O wait
@@ -670,7 +675,7 @@ lsof -p <pid>               # Open files
 
 ## Log Management
 
-### Q: Important log files to know.
+### ⭐ Q: Important log files to know.
 
 | Log File | Purpose |
 |----------|---------|
@@ -697,7 +702,7 @@ zgrep "error" /var/log/syslog.*.gz    # Search compressed rotated logs
 
 ## Kernel & Boot Process
 
-### Q: What are kernel parameters and how to tune them?
+### ⭐ Q: What are kernel parameters and how to tune them?
 
 ```bash
 # View all kernel parameters
@@ -732,7 +737,7 @@ sysctl -p
 | `net.ipv4.ip_forward` | 0 | 1 | Enable routing (needed for containers) |
 | `vm.overcommit_memory` | 0 | 1 | Redis/forks need this |
 
-### Q: What are cgroups and namespaces?
+### 🔥 Q: What are cgroups and namespaces?
 
 **These are the two Linux kernel features that make containers possible.**
 
@@ -747,6 +752,7 @@ sysctl -p
 | IPC | Inter-process communication |
 | USER | User and group IDs |
 | CGROUP | Cgroup root directory |
+| TIME | Boot and monotonic clocks (since kernel 5.6) |
 
 **Cgroups** — Provide **resource limits** (what a process can use):
 
@@ -767,11 +773,112 @@ cat /sys/fs/cgroup/<group>/memory.max
 cat /sys/fs/cgroup/<group>/cpu.max
 ```
 
+### 💡 Q: What's the difference between cgroups v1 and cgroups v2?
+
+**Cgroups v2** (unified hierarchy, default since RHEL 8 / Ubuntu 21.10):
+
+| Feature | cgroups v1 | cgroups v2 |
+|---------|-----------|-----------|
+| Hierarchy | Multiple independent hierarchies per controller | Single unified hierarchy |
+| Location | `/sys/fs/cgroup/<controller>/` | `/sys/fs/cgroup/` |
+| Controllers | Spread across many dirs | All in one tree |
+| Delegation | Unsafe, hard to secure | Safe, designed for unprivileged delegation |
+| Memory accounting | Optional, can be off | Always-on, more accurate |
+| Pressure Stall Information (PSI) | Not supported | Built-in (`cpu.pressure`, `memory.pressure`, `io.pressure`) |
+
+```bash
+# Check which version is in use
+mount | grep cgroup
+
+# cgroup v1 output:
+# tmpfs on /sys/fs/cgroup type tmpfs
+# cgroup on /sys/fs/cgroup/cpu,cpuacct type cgroup
+
+# cgroup v2 output:
+# cgroup2 on /sys/fs/cgroup type cgroup2
+
+# Read PSI (cgroup v2 only) — shows resource contention
+cat /sys/fs/cgroup/memory.pressure
+# some avg10=2.50 avg60=1.20 avg300=0.80 total=54321000
+# full avg10=0.00 avg60=0.00 avg300=0.00 total=0
+```
+
+**FAANG Tip:** Kubernetes 1.25+ defaults to cgroup v2. Older Docker versions may not support it — ensure runtime compatibility.
+
+### ⭐ Q: Explain systemd timers vs cron. When would you use each?
+
+**Cron** — Classic time-based job scheduler.
+
+```bash
+# Crontab format:
+# ┌───────────── minute (0 - 59)
+# │ ┌───────────── hour (0 - 23)
+# │ │ ┌───────────── day of month (1 - 31)
+# │ │ │ ┌───────────── month (1 - 12)
+# │ │ │ │ ┌───────────── day of week (0 - 6) (Sunday=0)
+# │ │ │ │ │
+# * * * * * /path/to/script.sh
+
+# Edit user crontab
+crontab -e
+
+# List current crontab
+crontab -l
+
+# Example: Run every day at 2:30 AM
+30 2 * * * /opt/backup.sh
+```
+
+**Systemd Timers** — Modern, more powerful alternative:
+
+```bash
+# Create timer unit: /etc/systemd/system/backup.timer
+[Unit]
+Description=Daily backup timer
+
+[Timer]
+OnCalendar=daily
+OnCalendar=02:30
+Persistent=true               # Run missed jobs on next boot
+RandomizedDelaySec=300        # Jitter to avoid thundering herd
+
+[Install]
+WantedBy=timers.target
+
+# Matching service unit: /etc/systemd/system/backup.service
+[Unit]
+Description=Backup job
+
+[Service]
+Type=oneshot
+ExecStart=/opt/backup.sh
+User=backup
+Group=backup
+
+# Enable and start
+systemctl enable --now backup.timer
+systemctl list-timers         # View all timers
+journalctl -u backup.service  # View logs
+```
+
+**When to use systemd timers:**
+- Need dependency management (run after network, database, etc.)
+- Want integrated logging via journald
+- Need resource limits (cgroup integration)
+- Require persistent mode (run missed jobs)
+- Random delay / spread load across time window
+
+**When to use cron:**
+- Simple time-based jobs
+- Portability across systems (even non-systemd)
+- User-level jobs (`crontab -e`)
+- Legacy compatibility
+
 ---
 
 ## Security Hardening
 
-### Q: How do you harden a Linux server?
+### ⭐ Q: How do you harden a Linux server?
 
 **Essential hardening checklist:**
 
@@ -819,7 +926,7 @@ cat /sys/fs/cgroup/<group>/cpu.max
 
 8. **SELinux / AppArmor** — Keep enabled, don't disable. Learn to write policies.
 
-### Q: What is SELinux?
+### ⭐ Q: What is SELinux?
 
 **Security-Enhanced Linux** — Mandatory Access Control (MAC) system that confines processes to the minimum required permissions.
 
@@ -849,11 +956,571 @@ ausearch -m AVC -ts recent
 sealert -a /var/log/audit/audit.log
 ```
 
+### 💡 Q: What are Linux capabilities?
+
+**Capabilities** split root's all-or-nothing privileges into fine-grained units. Instead of SUID binaries running as full root, they can hold only the specific capabilities they need.
+
+```bash
+# View capabilities of a file
+getcap /usr/bin/ping
+# /usr/bin/ping = cap_net_raw+ep
+
+# Common capabilities:
+# CAP_NET_BIND_SERVICE   — Bind to ports < 1024
+# CAP_NET_RAW            — Use raw sockets (ping)
+# CAP_SYS_ADMIN          — Mount filesystems, many admin tasks
+# CAP_SYS_TIME           — Set system clock
+# CAP_DAC_OVERRIDE       — Bypass file read/write/execute checks
+# CAP_CHOWN              — Change file ownership
+
+# Grant capability to a binary
+setcap cap_net_bind_service=+ep /usr/local/bin/myapp
+
+# View capabilities of a running process
+getpcaps <pid>
+cat /proc/<pid>/status | grep Cap
+
+# Remove capabilities
+setcap -r /usr/local/bin/myapp
+```
+
+**FAANG Tip:** Modern containers (Docker, Kubernetes) drop most capabilities by default. Use `--cap-add` sparingly — prefer the principle of least privilege.
+
+### ⭐ Q: How do you handle secrets securely on Linux?
+
+```bash
+# 1. Never store secrets in:
+# - Environment variables (visible in /proc/<pid>/environ)
+# - Command line args (visible in ps)
+# - Config files with 644 permissions
+# - Git repos
+
+# 2. Use secret management:
+# - Vault (HashiCorp)
+# - AWS Secrets Manager / Parameter Store
+# - GCP Secret Manager
+# - Kubernetes Secrets (with encryption at rest)
+
+# 3. File permissions
+chmod 600 /etc/myapp/secret.key       # Owner read/write only
+chown myapp:myapp /etc/myapp/secret.key
+
+# 4. Encrypted filesystems
+# Use LUKS for disk encryption, or encrypted filesystems like eCryptfs
+
+# 5. Tmpfs for secrets in memory (never touches disk)
+mount -t tmpfs -o size=10M,mode=700 tmpfs /mnt/secrets
+echo "secret_value" > /mnt/secrets/api_key
+# Disappears on reboot
+
+# 6. systemd LoadCredential (systemd 247+)
+# Passes secrets to services without exposing in ps/environ
+[Service]
+LoadCredential=api_key:/run/secrets/api_key
+# Access in service via $CREDENTIALS_DIRECTORY/api_key
+```
+
+---
+
+## Containers: Namespaces & Cgroups Deep Dive
+
+### 💡 Q: How would you manually create a container using namespaces?
+
+```bash
+# This demonstrates what Docker/containerd do under the hood
+
+# 1. Create new namespaces with unshare
+unshare --pid --net --mount --uts --ipc --fork /bin/bash
+# Now you're in a new namespace
+
+# 2. Inside the new namespace:
+# - PID namespace: you are PID 1
+echo $$        # Shows 1
+
+# - UTS namespace: set hostname without affecting host
+hostname container-demo
+
+# - Mount namespace: create isolated filesystem
+mkdir -p /tmp/container-root
+# In real containers, this would be an extracted image layer
+mount --bind /tmp/container-root /tmp/container-root
+chroot /tmp/container-root /bin/bash
+
+# - Network namespace: isolated network stack
+ip link add veth0 type veth peer name veth1
+ip link set veth1 netns <pid>
+ip addr add 10.0.0.1/24 dev veth0
+ip link set veth0 up
+```
+
+### 💡 Q: How do you limit container resource usage with cgroups v2?
+
+```bash
+# Create a cgroup for a container
+mkdir /sys/fs/cgroup/mycontainer
+
+# Set memory limit: 512MB
+echo "536870912" > /sys/fs/cgroup/mycontainer/memory.max
+
+# Set CPU limit: 50% of one core (500ms per 1000ms period)
+echo "50000 100000" > /sys/fs/cgroup/mycontainer/cpu.max
+
+# Set I/O weight (100-10000, default 100)
+echo "500" > /sys/fs/cgroup/mycontainer/io.weight
+
+# Add process to cgroup
+echo <pid> > /sys/fs/cgroup/mycontainer/cgroup.procs
+
+# Monitor memory usage
+cat /sys/fs/cgroup/mycontainer/memory.current
+cat /sys/fs/cgroup/mycontainer/memory.peak
+
+# Check if memory limit was hit (OOM)
+cat /sys/fs/cgroup/mycontainer/memory.events
+# oom 0
+# oom_kill 0
+```
+
+### ⭐ Q: What is the OOM score and how does the kernel decide which process to kill?
+
+```bash
+# Each process has an oom_score (0-1000)
+# Higher score = more likely to be killed
+
+# View OOM score
+cat /proc/<pid>/oom_score
+
+# Formula (simplified):
+# oom_score = (process_memory_MB * 1000 / total_memory_MB) + oom_score_adj
+
+# Adjust score (-1000 to +1000)
+echo -500 > /proc/<pid>/oom_score_adj    # Less likely to be killed
+echo 500 > /proc/<pid>/oom_score_adj     # More likely to be killed
+echo -1000 > /proc/<pid>/oom_score_adj   # Never killed (except PID 1)
+
+# Check OOM killer activity
+dmesg | grep -i "killed process"
+journalctl -k | grep -i oom
+
+# Common OOM causes:
+# 1. Memory leak in application
+# 2. No swap configured
+# 3. Cgroup memory limit too low
+# 4. Sudden traffic spike
+# 5. Large file caching exhausting memory
+```
+
+### 💡 Q: Explain `/proc` and `/sys` — what's the difference?
+
+**`/proc`** — Virtual filesystem exposing **kernel and process information** (read-mostly):
+
+```bash
+/proc/<pid>/           # Per-process info
+  ├── cmdline          # Command line with args
+  ├── environ          # Environment variables
+  ├── status           # Process state, memory, etc.
+  ├── fd/              # Open file descriptors
+  ├── maps             # Memory mappings
+  └── limits           # Resource limits (ulimit)
+
+/proc/sys/             # Kernel tunables (sysctl)
+/proc/meminfo          # System memory stats
+/proc/cpuinfo          # CPU info
+/proc/loadavg          # Load averages
+/proc/net/             # Network statistics
+```
+
+**`/sys`** — Virtual filesystem exposing **kernel objects, drivers, and hardware** (more structured, read-write):
+
+```bash
+/sys/class/            # Device classes (net, block, etc.)
+/sys/block/            # Block devices
+/sys/devices/          # Device tree
+/sys/fs/cgroup/        # Cgroup v2 root
+/sys/kernel/           # Kernel parameters
+/sys/module/           # Loaded kernel modules
+```
+
+**Key difference:** `/proc` is process-centric and legacy; `/sys` is device/kernel-centric and more modern/structured.
+
+---
+
+## Advanced Troubleshooting Scenarios
+
+### ⭐ Q: "Disk full" but `df` shows space available. What happened?
+
+**Cause:** Deleted files still held open by processes.
+
+```bash
+# Files deleted while a process still has them open don't free space
+# The inode and data blocks stay allocated until the process closes the FD
+
+# Find deleted files held open
+lsof +L1
+# Or:
+lsof | grep '(deleted)'
+
+# Example output:
+# nginx   1234 root   7w   REG   8,1   2G  (deleted) /var/log/nginx/access.log
+
+# Fix options:
+# 1. Restart the process holding the file
+systemctl restart nginx
+
+# 2. Or truncate the file descriptor
+# Find the FD number (7 in example above)
+> /proc/1234/fd/7
+# This frees the space immediately without restarting
+
+# 3. Kill the process (last resort)
+kill 1234
+```
+
+### ⭐ Q: Load average is high but CPU usage is low. What's happening?
+
+```bash
+# Load average counts:
+# 1. Processes using CPU (R state)
+# 2. Processes waiting for I/O (D state)  ← This is the culprit
+
+# 1. Check load average
+uptime
+# load average: 15.2, 12.8, 10.5    (but we have 4 CPUs)
+
+# 2. Look at CPU usage
+top
+# %Cpu(s):  10.2 us,  2.5 sy,  0.0 ni, 70.0 id, 17.0 wa, 0.0 hi, 0.3 si
+# ↑ High 'wa' (I/O wait) confirms disk bottleneck
+
+# 3. Find processes in 'D' state (uninterruptible sleep)
+ps aux | awk '$8 ~ /D/'
+# Or:
+ps -eo state,pid,cmd | grep "^D"
+
+# 4. Check disk I/O
+iostat -xz 1
+# High %util, high await = saturated disk
+
+# 5. Find the process doing I/O
+iotop -oP
+
+# Common causes:
+# - Slow disk (HDD on a busy server)
+# - Network filesystem timeout (NFS hang)
+# - Failing disk (check dmesg for I/O errors)
+# - Swap thrashing (vmstat si/so)
+```
+
+### ⭐ Q: A process won't die even with `kill -9`. What now?
+
+```bash
+# Check process state
+ps aux | grep <pid>
+
+# If state is 'D' (uninterruptible sleep):
+# The process is waiting for kernel I/O and CANNOT be killed
+
+# Common causes of unkillable D state:
+# 1. NFS mount that's gone away
+# 2. Disk hardware failure
+# 3. Buggy device driver
+# 4. Filesystem in bad state
+
+# Diagnosis:
+# 1. Check what the process is waiting for
+cat /proc/<pid>/wchan        # Kernel wait channel
+cat /proc/<pid>/stack        # Kernel stack trace
+
+# 2. Check for I/O errors
+dmesg | tail -50
+journalctl -k -n 50
+
+# 3. If it's an NFS issue:
+mount | grep nfs
+# Try unmounting with force (may not work if process is stuck)
+umount -f -l /mnt/nfs        # -l = lazy unmount
+
+# 4. Last resort: reboot
+# There is no way to kill a process in D state waiting on broken I/O
+# This is by design — the kernel is waiting for hardware to respond
+```
+
+### ⭐ Q: Server has high memory usage but no large processes. What's using it?
+
+```bash
+# Linux uses free RAM for caching — this is GOOD, not a problem
+# But sometimes you need to distinguish real usage from cache
+
+# 1. Check memory breakdown
+free -h
+#               total    used    free    shared  buff/cache   available
+# Mem:           16G      2G     1G      256M      13G         13.5G
+# ↑ 13G cached, but 13.5G "available" = no problem
+
+# 2. If "available" is low, check slab cache (kernel memory)
+slabtop
+# Press 's' to sort by size
+# Look for large caches: dentry, inode_cache, buffer_head
+
+# 3. Check for memory leaks in kernel modules
+cat /proc/meminfo | grep -i slab
+# Slab:             3145728 kB     ← If this is huge, kernel leak
+
+# 4. Check shared memory segments
+ipcs -m
+# If large segments exist, find which process
+lsof | grep "/dev/shm"
+
+# 5. Check for tmpfs usage
+df -h | grep tmpfs
+du -sh /dev/shm/*
+du -sh /tmp/*
+
+# 6. Check huge pages
+cat /proc/meminfo | grep Huge
+# HugePages_Total:    1024
+# HugePages_Free:      512
+# HugePages_Rsvd:        0
+# Hugepagesize:       2048 kB
+# = 1GB allocated to huge pages
+
+# 7. Memory cgroup limits (if in container)
+cat /sys/fs/cgroup/memory.current
+cat /sys/fs/cgroup/memory.max
+```
+
+### ⭐ Q: How do you troubleshoot "too many open files" errors?
+
+```bash
+# Error: "error: too many open files"
+# Cause: Process hit file descriptor limit
+
+# 1. Check current limits
+ulimit -n             # Current shell
+ulimit -Hn            # Hard limit
+ulimit -Sn            # Soft limit
+
+# 2. Check process-specific limit
+cat /proc/<pid>/limits | grep "open files"
+
+# 3. Check current FD usage
+ls /proc/<pid>/fd | wc -l
+lsof -p <pid> | wc -l
+
+# 4. Find what files/sockets are open
+lsof -p <pid>
+# Look for:
+# - Too many sockets (network leak)
+# - Too many log files (improper log rotation)
+# - Leaked file descriptors (application bug)
+
+# 5. System-wide limits
+cat /proc/sys/fs/file-max        # Max open files system-wide
+cat /proc/sys/fs/file-nr         # Currently open files
+# Format: <allocated>  <unused>  <max>
+
+# 6. Fix: Increase limits temporarily
+ulimit -n 65535
+
+# 7. Fix: Increase limits permanently
+# /etc/security/limits.conf
+myapp soft nofile 65535
+myapp hard nofile 65535
+* soft nofile 65535
+* hard nofile 65535
+
+# For systemd services:
+# /etc/systemd/system/myapp.service
+[Service]
+LimitNOFILE=65535
+
+# Then reload
+systemctl daemon-reload
+systemctl restart myapp
+
+# 8. Increase system-wide limit
+sysctl -w fs.file-max=2097152
+# Persistent: add to /etc/sysctl.conf
+fs.file-max = 2097152
+```
+
+### 💡 Q: How do you find which process is using a deleted library file after upgrade?
+
+```bash
+# After upgrading a shared library (glibc, OpenSSL, etc.),
+# running processes still use the old version from memory
+# This can be a security risk or cause crashes
+
+# 1. Find processes using deleted files
+lsof | grep '(deleted)'
+# Or specific to libraries:
+lsof | grep -E '\.so.*deleted'
+
+# 2. Find which processes need restart after library upgrade
+checkrestart          # Debian/Ubuntu (debian-goodies package)
+needs-restarting      # RHEL/CentOS
+
+# 3. Check specific process
+lsof -p <pid> | grep DEL
+cat /proc/<pid>/maps | grep deleted
+
+# 4. Restart affected services
+systemctl restart <service>
+
+# 5. For critical libraries (libc, libssl), may need to restart many services
+# Some distros provide a helper:
+needrestart           # Interactive tool showing what needs restart
+```
+
+---
+
+## Command-Line One-Liners & Golf
+
+### 💡 Q: Common one-liner commands asked in screening rounds.
+
+```bash
+# Find top 10 largest files
+find / -type f -printf '%s %p\n' 2>/dev/null | sort -rn | head -10
+
+# Find top 10 largest directories
+du -ah / 2>/dev/null | sort -rh | head -10
+
+# Count unique IPs in access log
+awk '{print $1}' access.log | sort | uniq -c | sort -rn | head
+
+# Find files modified in last 24 hours
+find /var/log -type f -mtime -1
+
+# Kill all processes matching a name
+pkill -f pattern
+# Or:
+ps aux | grep pattern | awk '{print $2}' | xargs kill
+
+# Monitor live network connections
+watch -n 1 'ss -tunapl | grep ESTABLISHED'
+
+# Real-time disk I/O per process
+iotop -oPa
+
+# Count lines of code in a project
+find . -name '*.py' | xargs wc -l | sort -rn
+
+# Find all SUID binaries (security audit)
+find / -perm -4000 -type f 2>/dev/null
+
+# Check which process is listening on a port
+lsof -i :8080
+# Or:
+ss -tulpn | grep :8080
+
+# Continuously ping and log only failures
+ping -i 1 8.8.8.8 | grep --line-buffered -v 'time=' >> ping_failures.log
+
+# Show TCP connections per IP
+ss -tan | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -rn
+
+# Recursively find and replace in files
+find . -name '*.txt' -exec sed -i 's/old/new/g' {} +
+
+# Monitor log file for keyword and send alert
+tail -f /var/log/app.log | grep --line-buffered ERROR | while read line; do
+  echo "Error detected: $line" | mail -s "Alert" admin@example.com
+done
+
+# Backup with progress and compression
+tar czf - /data | pv -s $(du -sb /data | awk '{print $1}') > backup.tar.gz
+
+# Show processes sorted by memory
+ps aux --sort=-%mem | head
+
+# Generate random password
+openssl rand -base64 32
+
+# Show open network connections with process names
+netstat -tulpn
+# Or modern:
+ss -tulpn
+
+# Recursively change ownership
+chown -R user:group /path
+
+# Find zombie processes
+ps aux | awk '$8 ~ /Z/ {print}'
+
+# Compress old logs
+find /var/log -name "*.log" -mtime +30 -exec gzip {} \;
+
+# Show directory sizes, sorted
+du -h --max-depth=1 | sort -rh
+
+# Check if a remote port is open
+timeout 2 bash -c "</dev/tcp/example.com/443" && echo "Open" || echo "Closed"
+
+# Extract IP addresses from text
+grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}' file.txt
+
+# Monitor CPU usage per core
+mpstat -P ALL 1
+
+# Show systemd boot time breakdown
+systemd-analyze blame
+systemd-analyze critical-chain
+
+# Find files with spaces in name
+find . -name "* *" -type f
+
+# Recursive case-insensitive grep
+grep -ri "pattern" /path/
+
+# Show largest packages installed (Debian/Ubuntu)
+dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -rn | head
+
+# Show largest packages (RHEL/CentOS)
+rpm -qa --queryformat '%{SIZE} %{NAME}\n' | sort -rn | head
+
+# Monitor memory usage per process
+watch -n 1 'ps aux --sort=-%mem | head -20'
+
+# Clear systemd journal
+journalctl --rotate
+journalctl --vacuum-time=1d
+
+# Test disk write speed
+dd if=/dev/zero of=/tmp/test bs=1M count=1024 oflag=direct
+
+# Test disk read speed
+dd if=/tmp/test of=/dev/null bs=1M count=1024 iflag=direct
+
+# Show established connections count by state
+ss -tan | awk '{print $1}' | sort | uniq -c
+
+# Find files owned by user
+find / -user username 2>/dev/null
+
+# Show kernel messages for a device
+dmesg | grep -i sda
+
+# Show routing table
+ip route show
+# Or:
+route -n
+
+# Flush DNS cache (systemd-resolved)
+resolvectl flush-caches
+
+# Show all listening services
+systemctl list-units --type=service --state=running
+
+# Check SSL certificate expiry
+echo | openssl s_client -connect example.com:443 2>/dev/null | \
+  openssl x509 -noout -dates
+```
+
 ---
 
 ## Scenario-Based Questions
 
-### Q: A user cannot SSH into a server. Troubleshoot.
+### 🔥 Q: A user cannot SSH into a server. Troubleshoot.
 
 ```bash
 # 1. Network connectivity
@@ -898,7 +1565,7 @@ cat /etc/hosts.deny
 df -h
 ```
 
-### Q: Server is unreachable. How do you troubleshoot?
+### 🔥 Q: Server is unreachable. How do you troubleshoot?
 
 ```bash
 # From another machine:
@@ -924,7 +1591,7 @@ nslookup <hostname>
 # Check logs: dmesg | tail, journalctl -xn
 ```
 
-### Q: A process is consuming 100% CPU. What do you do?
+### 🔥 Q: A process is consuming 100% CPU. What do you do?
 
 ```bash
 # 1. Identify the process
@@ -949,6 +1616,154 @@ cpulimit -p <pid> -l 50     # Limit to 50% CPU
 # 5. Kill if necessary
 kill <pid>                   # SIGTERM first
 kill -9 <pid>                # SIGKILL if unresponsive
+```
+
+### 🔥 Q: Memory is full but applications are being OOM-killed. How do you investigate?
+
+```bash
+# 1. Check current memory state
+free -h
+cat /proc/meminfo
+
+# 2. View OOM killer activity
+dmesg | grep -i "killed process"
+journalctl -xb | grep -i oom
+grep -i oom /var/log/syslog
+
+# 3. Identify memory hogs
+ps aux --sort=-%mem | head -20
+top -o %MEM
+
+# 4. Check if swap is enabled and being used
+swapon --show
+vmstat 1 5
+# Watch si/so (swap in/out) — high values = swap thrashing
+
+# 5. Check for memory leaks
+# Track process memory over time
+watch -n 1 'ps aux --sort=-%mem | head'
+# Or use pmem:
+pmap -x <pid> | tail -1
+
+# 6. Check slab memory (kernel)
+slabtop
+cat /proc/meminfo | grep -i slab
+
+# 7. Check cgroup memory limits (if containerized)
+cat /sys/fs/cgroup/memory.max
+cat /sys/fs/cgroup/memory.current
+cat /sys/fs/cgroup/memory.events | grep oom
+
+# 8. Adjust OOM preferences for critical processes
+echo -1000 > /proc/<critical-pid>/oom_score_adj
+
+# 9. Long-term fixes:
+# - Add more RAM
+# - Enable/increase swap
+# - Fix memory leaks in application
+# - Tune cgroup limits
+# - Use memory profiling (valgrind, heaptrack)
+```
+
+### ⭐ Q: SSH login is slow. How do you troubleshoot?
+
+```bash
+# Common causes: DNS timeout, GSSAPI auth, slow home directory
+
+# 1. Test with verbose output
+ssh -vvv user@host
+# Look for delays at specific steps
+
+# 2. Disable DNS reverse lookup (server-side)
+# /etc/ssh/sshd_config
+UseDNS no
+systemctl restart sshd
+
+# 3. Disable GSSAPI authentication (client-side)
+ssh -o GSSAPIAuthentication=no user@host
+# Permanent: ~/.ssh/config
+Host *
+  GSSAPIAuthentication no
+
+# 4. Check if home directory is on NFS or slow storage
+df -h ~
+mount | grep home
+
+# 5. Check PAM configuration
+# /etc/pam.d/sshd
+# Comment out slow modules like pam_motd.so with network calls
+
+# 6. Check DNS resolution
+time host $(hostname)
+# Should be instant
+
+# 7. Check for slow .bashrc / .bash_profile
+time bash -c "source ~/.bashrc"
+
+# 8. Network latency
+ping -c 5 <server>
+mtr <server>
+
+# 9. Check logs
+tail -f /var/log/auth.log        # Ubuntu
+tail -f /var/log/secure          # RHEL
+
+# Quick fixes:
+# Client: ssh -o GSSAPIAuthentication=no -o UseDNS=no user@host
+# Server: Add to /etc/ssh/sshd_config:
+#   UseDNS no
+#   GSSAPIAuthentication no
+```
+
+### 💡 Q: How do you hunt down a memory leak in a long-running process?
+
+```bash
+# 1. Confirm it's a leak (memory usage grows over time)
+watch -n 5 'ps aux | grep <process>'
+# Or:
+pidstat -r -p <pid> 1
+
+# 2. Check memory maps
+pmap -x <pid>
+cat /proc/<pid>/smaps
+# Look for growing anonymous memory regions
+
+# 3. Use valgrind (requires restarting process)
+valgrind --leak-check=full --log-file=valgrind.log ./myapp
+
+# 4. Use heaptrack (C/C++)
+heaptrack ./myapp
+heaptrack_gui heaptrack.myapp.*.gz
+
+# 5. For Python: memory_profiler
+pip install memory-profiler
+python -m memory_profiler script.py
+
+# Or py-spy:
+py-spy dump --pid <pid>
+
+# 6. For Java: heap dump
+jmap -dump:live,format=b,file=heap.bin <pid>
+# Analyze with Eclipse MAT or jhat
+
+# 7. For Go: pprof
+curl http://localhost:6060/debug/pprof/heap > heap.prof
+go tool pprof heap.prof
+
+# 8. Monitor malloc stats (glibc)
+gdb -p <pid>
+(gdb) call malloc_stats()
+
+# 9. Check for file descriptor leaks (can appear as memory leak)
+ls /proc/<pid>/fd | wc -l
+lsof -p <pid> | wc -l
+
+# 10. Common leak patterns:
+# - Growing heap without corresponding free()
+# - Unclosed file descriptors
+# - Retained references (Java, Python)
+# - Memory mapped files not unmapped
+# - Growing kernel slab cache (kernel memory leak)
 ```
 
 ---
@@ -1008,7 +1823,14 @@ grep -rn "pattern" /path/   # Recursive grep with line numbers
 
 - **Brendan Gregg's Linux Performance Tools** — https://www.brendangregg.com/linuxperf.html
 - **Linux Performance Observability Tools** — https://www.brendangregg.com/Perf/linux_observability_tools.png
+- **USE Method** — https://www.brendangregg.com/usemethod.html
+- **Linux Tracing Systems** — https://www.brendangregg.com/blog/2015-07-08/choosing-a-linux-tracer.html
 - **The Linux Command Line (book)** — William Shotts
 - **How Linux Works (book)** — Brian Ward
+- **Systems Performance (book)** — Brendan Gregg
+- **Linux Performance** — https://www.kernel.org/doc/html/latest/
 - **Linux man pages** — `man <command>` is your best friend
 - **RHCSA/RHCE Certification Guides** — Great structured learning path
+- **CGroups v2 Documentation** — https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html
+- **LWN.net** — In-depth Linux kernel articles — https://lwn.net/
+- **Linux Insides** — Kernel internals book — https://0xax.gitbooks.io/linux-insides/

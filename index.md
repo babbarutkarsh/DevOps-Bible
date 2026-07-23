@@ -58,6 +58,10 @@ Use the sidebar (or the search bar at the top) to jump into any topic. Tick a
 box as you finish each one — the bar above tracks your overall completion and is
 saved in your browser.
 
+Inside each topic, every question is tagged by how often it shows up in real
+interview loops: **🔥 very frequently asked · ⭐ important · 💡 good to know** —
+so you can drill the 🔥 lines first when time is short.
+
 <div class="dob-topics" id="dob-topics">
 
 <h3>Core Infrastructure</h3>
@@ -98,8 +102,20 @@ saved in your browser.
 
 <h3>Programming &amp; Scripting</h3>
 <ul class="dob-list">
-  <li><label class="dob-item"><input type="checkbox" data-topic="golang"><span><a href="topics/golang.html"><strong>Go (Golang)</strong></a> — Go for DevOps tooling and interviews</span></label></li>
-  <li><label class="dob-item"><input type="checkbox" data-topic="scripting"><span><a href="topics/scripting.html"><strong>Shell Scripting &amp; Python</strong></a> — Bash essentials and Python for automation</span></label></li>
+  <li><label class="dob-item"><input type="checkbox" data-topic="golang"><span><a href="topics/golang.html"><strong>Go (Golang)</strong></a> — Concurrency (goroutines, channels, context), worker pools, race detection, GC tuning, building static container binaries</span></label></li>
+  <li><label class="dob-item"><input type="checkbox" data-topic="scripting"><span><a href="topics/scripting.html"><strong>Shell Scripting &amp; Python</strong></a> — Bash (set -euo pipefail, grep/sed/awk, traps) and Python automation (subprocess, boto3, retries) with coding-round problems</span></label></li>
+  <li><label class="dob-item"><input type="checkbox" data-topic="dsa-for-sre"><span><a href="topics/dsa-for-sre.html"><strong>DSA for DevOps &amp; SRE</strong></a> — The coding round: arrays/strings/hashing patterns, 25+ worked problems in Python &amp; Go, plus ops-flavored problems (log parsing, LRU, rate limiter)</span></label></li>
+</ul>
+
+<h3>Modern Platform &amp; AI Infrastructure</h3>
+<ul class="dob-list">
+  <li><label class="dob-item"><input type="checkbox" data-topic="platform-engineering"><span><a href="topics/platform-engineering.html"><strong>Platform Engineering &amp; GitOps</strong></a> — IDPs (Backstage), ArgoCD vs Flux, progressive delivery, Crossplane, service mesh, multi-tenancy, FinOps</span></label></li>
+  <li><label class="dob-item"><input type="checkbox" data-topic="genai-llmops"><span><a href="topics/genai-llmops.html"><strong>GenAI, LLMOps &amp; AI Infra</strong></a> — MLOps vs LLMOps, model serving (vLLM/KServe), GPU scheduling &amp; cost, RAG &amp; vector DBs, AI reliability</span></label></li>
+</ul>
+
+<h3>Interview Rounds</h3>
+<ul class="dob-list">
+  <li><label class="dob-item"><input type="checkbox" data-topic="behavioral-sre"><span><a href="topics/behavioral-sre.html"><strong>Behavioral &amp; SRE Culture</strong></a> — STAR framework, blameless postmortems, on-call/incident command, SLO &amp; error-budget discussions, sample senior-level stories</span></label></li>
 </ul>
 
 </div>

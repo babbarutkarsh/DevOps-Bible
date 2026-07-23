@@ -9,7 +9,8 @@ description: "A condensed two-day cram sheet — the highest-yield facts, comman
 
 A fast, high-signal recap for the 48 hours before an interview. **Day 1** covers
 fundamentals, containers, and IaC. **Day 2** covers cloud, delivery,
-observability, system design, and security. Skim the bold lines; drill into any
+observability, system design, and security — plus modern platform/AI-infra and
+the coding & behavioral rounds. Skim the bold lines; drill into any
 [full topic](../) you're shaky on.
 {: .fs-5 .fw-300 }
 
@@ -145,6 +146,46 @@ observability, system design, and security. Skim the bold lines; drill into any
 
 ---
 
+## Day 2+ — Modern Platform, AI Infra & Interview Rounds
+
+### <label class="rev-h"><input type="checkbox" data-rev="platform-engineering"> Platform Engineering & GitOps</label>
+
+- **Platform engineering** = build an **Internal Developer Platform (IDP)** as a product; golden paths / paved roads reduce app-team cognitive load; self-service infra.
+- **IDP tooling:** Backstage (catalog, templates, TechDocs), Port/Cortex. Success = adoption + lead time + DevEx.
+- **GitOps:** declarative, versioned, **pulled**, continuously reconciled. **ArgoCD** (app-centric, UI, ApplicationSets) vs **Flux** (controller/CRD-native). App-of-apps for scale.
+- **Progressive delivery:** Argo Rollouts / Flagger do metric-based automated canary → promote or auto-rollback.
+- **Crossplane** = infra as K8s resources (compositions/XRDs) — reconciliation loop vs Terraform's plan/apply.
+- **Service mesh:** Istio vs Linkerd vs **Cilium (eBPF/sidecarless, Ambient)**; gives mTLS, traffic shifting, observability — use only when the complexity pays off.
+- **Guardrails:** OPA/Gatekeeper & Kyverno policies; multi-tenancy via namespace vs cluster isolation, vCluster. **FinOps:** Kubecost/OpenCost, right-sizing, spot + Karpenter.
+
+### <label class="rev-h"><input type="checkbox" data-rev="genai-llmops"> GenAI, LLMOps & AI Infra</label>
+
+- **MLOps vs LLMOps:** MLOps = train/deploy/monitor your models (registry, feature store, drift); LLMOps adds prompts, evals, RAG, guardrails around mostly-pretrained models.
+- **RAG** (retrieve → augment → generate): chunk → embed → store in a **vector DB** (pgvector/Pinecone/Weaviate/Milvus) → retrieve top-k → stuff context. Cheaper/faster to update than fine-tuning.
+- **RAG vs fine-tune vs prompt:** prompt first, RAG for fresh/proprietary knowledge, fine-tune for style/format or latency — not for teaching new facts.
+- **Serving:** vLLM / TGI / Triton / KServe; continuous batching + KV cache + quantization drive throughput; watch cold starts & scale-to-zero.
+- **GPU infra:** device plugin, taints/affinity, MIG/time-slicing, spot GPUs + Karpenter. **GPU cost is the dominant FinOps concern.**
+- **AI reliability:** track tokens/latency/cost/quality; guard against **prompt injection** and secret leakage; eval offline + LLM-as-judge.
+
+### <label class="rev-h"><input type="checkbox" data-rev="dsa-for-sre"> DSA for the Coding Round</label>
+
+- **Expect** Easy→Medium arrays/strings/hashing (sometimes graphs/heap). They grade **clean working code + complexity + edge cases**, language of choice (Python/Go).
+- **Patterns:** two pointers, sliding window, hashing, stack, intervals, binary search, BFS/DFS, heap/top-K.
+- **Must-know:** Two Sum, Merge Intervals, Kadane (max subarray), valid/​group anagrams, longest substring w/o repeats, product-except-self, top-K frequent, **LRU cache**, **token-bucket rate limiter**.
+- **Ops-flavored:** parse logs for top-K IPs (hashmap+heap), merge overlapping incident intervals, rate limiter — connect DSA to the job.
+- **Framework:** clarify → examples → brute force → optimize → code → test → state complexity.
+
+### <label class="rev-h"><input type="checkbox" data-rev="behavioral-sre"> Behavioral & SRE Culture</label>
+
+- **STAR:** Situation → Task → Action → Result. **Quantify the result** (MTTR cut, toil hours saved, % availability). Have 5–6 stories ready.
+- **Blameless postmortem:** focus on systems not people; timeline, root cause, action items with owners. Psychological safety → honest signals.
+- **SLO / error budget:** SLO = reliability target; error budget = 1 − SLO. Budget spent → **freeze features, invest in reliability**. Balances velocity vs stability.
+- **Toil** = manual, repetitive, automatable, no-lasting-value work — measure it, cap it, automate it.
+- **On-call/incident:** healthy rotations, actionable alerts, runbooks; incident command roles (IC / comms / ops); know MTTD/MTTR.
+- **Have ready:** a big outage you handled, a mistake you owned, a disagreement you navigated, toil you automated. Ask the interviewer about on-call health & error-budget policy.
+
+---
+
 ## Final-Hour Checklist
 
 - [ ] Draw the **Kubernetes control-plane → node** flow from memory.
@@ -155,6 +196,10 @@ observability, system design, and security. Skim the bold lines; drill into any
 - [ ] Define **SLI/SLO/SLA + error budget** in one breath.
 - [ ] Sketch a **highly available, scalable web app** on AWS (LB + ASG + Multi-AZ RDS + cache + CDN).
 - [ ] State **RPO vs RTO** and the four DR tiers.
+- [ ] Contrast **ArgoCD vs Flux** and explain the GitOps reconcile loop.
+- [ ] Explain a **RAG pipeline** and when to RAG vs fine-tune vs prompt.
+- [ ] Whiteboard an **LRU cache** and a **token-bucket rate limiter**.
+- [ ] Tell one **STAR outage story** with a quantified result, and define **error budget** policy.
 
 <style>
 .rev-progress { margin: 1.25rem 0 0.5rem; }
