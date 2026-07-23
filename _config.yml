@@ -19,7 +19,7 @@ plugins:
   - jekyll-sitemap
 
 # --- Just-the-Docs options ---
-color_scheme: dark
+color_scheme: dob
 
 search_enabled: true
 search:

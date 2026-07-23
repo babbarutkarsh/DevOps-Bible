@@ -83,22 +83,6 @@ saved in your browser.
 
 </div>
 
-<style>
-.dob-progress { margin: 1.5rem 0 0.5rem; }
-.dob-progress__head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.3rem; }
-.dob-progress__label { font-weight: 600; }
-.dob-progress__count { font-size: 0.85em; opacity: 0.85; }
-.dob-progress__track { width: 100%; height: 14px; background: rgba(128,128,128,0.25); border-radius: 999px; overflow: hidden; }
-.dob-progress__fill { height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg, #2f81f7, #3fb950); transition: width 0.35s ease; }
-.dob-progress__reset { margin-top: 0.5rem; font-size: 0.8em; background: none; border: 1px solid rgba(128,128,128,0.4); color: inherit; border-radius: 6px; padding: 0.2rem 0.6rem; cursor: pointer; opacity: 0.8; }
-.dob-progress__reset:hover { opacity: 1; border-color: #2f81f7; }
-.dob-list { list-style: none; margin-left: 0; padding-left: 0; }
-.dob-item { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.25rem 0; cursor: pointer; }
-.dob-item input { margin-top: 0.35rem; width: 16px; height: 16px; flex: 0 0 auto; cursor: pointer; accent-color: #3fb950; }
-.dob-item input:checked + span { opacity: 0.6; }
-.dob-item input:checked + span a strong { text-decoration: line-through; }
-</style>
-
 <script>
 (function () {
   var KEY = "dob-progress-v1";

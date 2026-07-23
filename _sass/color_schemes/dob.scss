@@ -1,0 +1,21 @@
+// DevOps Bible — custom dark color scheme.
+// Matches the palette used on babbarutkarsh.github.io (cyan → violet on deep navy).
+
+$body-background-color:      #05070e;
+$sidebar-color:              #0a0f1e;
+$search-background-color:    #0d1426;
+$table-background-color:     #0d1426;
+$code-background-color:      #0d1426;
+
+$body-text-color:            #c7d2e6;
+$body-heading-color:         #e6edf7;
+$nav-child-link-color:       #97a6c2;
+$search-result-preview-color:#97a6c2;
+
+$link-color:                 #22d3ee;
+$btn-primary-color:          #818cf8;
+$base-button-color:          #101a30;
+
+$border-color:               #1c2740;
+
+$feedback-color:             darken($sidebar-color, 3%);
